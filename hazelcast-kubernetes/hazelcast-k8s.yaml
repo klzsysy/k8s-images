@@ -1,0 +1,42 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    k8s-app: hazelcast
+  name: hazelcast
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      k8s-app: hazelcast
+  template:
+    metadata:
+      labels:
+        k8s-app: hazelcast
+      name: hazelcast
+    spec:
+      containers:
+      - name: hazelcast
+        env:
+        - name: HAZELCAST_SERVICE
+          value: hazelcast
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        image: klzsysy/hazelcast-k8s:3.10.1
+        imagePullPolicy: IfNotPresent
+      restartPolicy: Always
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    k8s-app: hazelcast
+  name: hazelcast
+spec:
+  ports:
+    - port: 5701
+  selector:
+    k8s-app: hazelcast
