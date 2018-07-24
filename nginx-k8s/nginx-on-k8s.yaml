@@ -14,10 +14,14 @@ spec:
       labels:
         app: nginx-on-k8s
     spec:
+      securityContext:
+        runAsUser: 101
       containers:
         - image: klzsysy/nginx-on-k8s:1.13.12
           imagePullPolicy: Always
           name: nginx-on-k8s
+          securityContext:
+            allowPrivilegeEscalation: false
           ports:
             - containerPort: 8080
               protocol: TCP
